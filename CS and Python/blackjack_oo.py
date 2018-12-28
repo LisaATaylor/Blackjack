@@ -60,6 +60,7 @@ class Player:
         if 'A' in [c.val for c in self.hand]:
             print('Busted with Ace=11, converting to Ace=1')
             self.hand.remove('A')
+			self.hand.append('a')
             self.handvalue -=10
             
         

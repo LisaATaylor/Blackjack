@@ -18,7 +18,7 @@ for suit in suits:
     deck.extend(suitcards)
     
 cardval_lookup=dict(zip(deck,cardvals_numeric*4)) #used to convert card names to values
-#ncards=len(deck)
+
 
 def drawcard():
     #picks card from deck and return it as string (i.e. 'H3')
@@ -63,12 +63,11 @@ while not (stand or p_busted):  #if not standing or already busted
             if len(aces)>0:
                 p_hand_sum-=10
                 print('Converting one ace from 11 to 1\nYour total is now {}'.format(p_hand_sum))
-                continue
             else:
                 print('BUSTED!  Game over.')
                 p_busted=True
         else:
-            continue
+            pass
     else:
         stand=True
 
@@ -77,7 +76,7 @@ if not p_busted:  #if player stopped before busting play dealer
     dealer_hand=dealer_hand+[drawcard()]
     dealer_hand=dealer_hand+[drawcard()]
     
-    while sumhand(dealer_hand)<=17: #keep dealing until dealer hits 17
+    while sumhand(dealer_hand)<=17: #keep dealing until dealer hits 17.  Needs workflow for converting Ace to 1.
         dealer_hand=dealer_hand+[drawcard()]
         
     if sumhand(dealer_hand)>21:
