@@ -2,9 +2,6 @@
 """
 Created on Thu Dec 27 13:01:54 2018
 
-Failing on player hand Heart 5, Spade A
-
-
 @author: LACKERMAN
 """
 import random
@@ -128,6 +125,9 @@ class BlackjackGame:
         self.deck=Deck(2)
         self.deck.shuffle()
         self.player.draw(2,self.deck)
+        if self.player.hand_value()==22:#in case drew 2 aces in first draw, convert one from 11 to 1
+            self.player.convert_ace()
+            
     def status_msg(self):
         print('Player hand contains: '+', '.join([c.name for c in self.player.hand]) +' for a total of: '+str(self.player.hand_value()))
 

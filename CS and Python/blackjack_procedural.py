@@ -17,8 +17,11 @@ for suit in suits:
     suitcards=[suit+cv for cv in cardvals_txt]
     deck.extend(suitcards)
     
+#create card value lookup dict
 cardval_lookup=dict(zip(deck,cardvals_numeric*4)) #used to convert card names to values
-
+#add low aces to lookup table
+lowaces=dict(zip([suit+'a' for suit in suits],[1]*4))
+cardval_lookup.update(lowaces)
 
 def drawcard():
     #picks card from deck and return it as string (i.e. 'H3')
@@ -30,16 +33,26 @@ def drawcard():
 def sumhand(hand_txt):
     return sum([cardval_lookup[h] for h in hand_txt])
 
-#zero out holding vars
+def convert_ace(player_hand,player_name):
+    try:
+        aceix=[c[1] for c in player_hand].index('A') #returns index of first 'A' or valueerror if no match
+        acesuit=player_hand[aceix][0]
+        del player_hand[aceix]
+        player_hand.append(acesuit+'a')#add back ace with value=1
+        print('{0} busted with at least one ace.  Converted one ace from 11 to 1.  {0}\'s total is now {1}.'.format(player_name,str(sumhand(player_hand))))        
+    except:
+        pass
+
+#holding vars for hands
 player_hand=[]    
 dealer_hand=[]  
-p_hand_sum=0
-d_hand_sum=0
 
 #deal first two cards to player
 player_hand=player_hand+[drawcard()]
 player_hand=player_hand+[drawcard()]
 p_hand_sum=sumhand(player_hand)
+if p_hand_sum==22: # handle unusual case where initially draw 2 aces
+    convert_ace(player_hand,'Player')
 
 print('Your first two cards are: '+', '.join(player_hand))
 print('Your running total is: {}'.format(p_hand_sum))
@@ -54,15 +67,13 @@ while not (stand or p_busted):  #if not standing or already busted
     if play=='h':
         player_hand=player_hand+[drawcard()]
         print('Your hand is now: '+' '.join(player_hand))
-        p_hand_sum=sumhand(player_hand)
-        print('Your total is now: '+str(p_hand_sum))
+        #p_hand_sum=sumhand(player_hand)
+        print('Your total is now: '+str(sumhand(player_hand)))
 
-        if p_hand_sum>21:
-            #test for holding aces
-            aces=[x for x in player_hand if x[-1]=='A']
-            if len(aces)>0:
-                p_hand_sum-=10
-                print('Converting one ace from 11 to 1\nYour total is now {}'.format(p_hand_sum))
+        if sumhand(player_hand)>21:
+            convert_ace(player_hand,'Player')   
+            if sumhand(player_hand)<=21:
+                continue
             else:
                 print('BUSTED!  Game over.')
                 p_busted=True
@@ -76,16 +87,21 @@ if not p_busted:  #if player stopped before busting play dealer
     dealer_hand=dealer_hand+[drawcard()]
     dealer_hand=dealer_hand+[drawcard()]
     
-    while sumhand(dealer_hand)<=17: #keep dealing until dealer hits 17.  Needs workflow for converting Ace to 1.
+    while sumhand(dealer_hand)<=17: #keep dealing until dealer hits 17.  
         dealer_hand=dealer_hand+[drawcard()]
-        
-    if sumhand(dealer_hand)>21:
-        print('Dealer busted with {}.  You win!'.format(sumhand(dealer_hand)))
-        d_busted=True
+        if sumhand(dealer_hand)>21:
+            convert_ace(dealer_hand,'Dealer')
+            if sumhand(dealer_hand)<=21:
+                continue
+            else:
+                d_busted=True
+                print('Dealer busted with {}.  You win!'.format(sumhand(dealer_hand)))
+                break
+    print(dealer_hand)    
 
 if not (d_busted or p_busted):  #if neither player or dealer busted, compare totals
     d_hand_sum=sumhand(dealer_hand)
-    
+    p_hand_sum=sumhand(player_hand)
     if d_hand_sum>p_hand_sum:
         print('Dealer has '+str(d_hand_sum)+'\nDealer wins :(')
     elif d_hand_sum<p_hand_sum:
