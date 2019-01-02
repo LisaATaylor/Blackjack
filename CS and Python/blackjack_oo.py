@@ -107,8 +107,8 @@ class Player:
             acesuit=self.hand[aceix].suit
             del self.hand[aceix]
             self.hand.append(Card('a',acesuit))#add back ace with value=1
-        except:
-            pass
+        except ValueError:
+            print('No aces to convert.')
             
 class BlackjackGame:
     '''Initiates the game, holds all objects associated with the game

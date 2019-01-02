@@ -40,8 +40,8 @@ def convert_ace(player_hand,player_name):
         del player_hand[aceix]
         player_hand.append(acesuit+'a')#add back ace with value=1
         print('{0} busted with at least one ace.  Converted one ace from 11 to 1.  {0}\'s total is now {1}.'.format(player_name,str(sumhand(player_hand))))        
-    except:
-        pass
+    except ValueError:
+        print('No aces to convert.')
 
 #holding vars for hands
 player_hand=[]    
