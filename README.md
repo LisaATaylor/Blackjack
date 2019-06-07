@@ -1,2 +1,1 @@
-# K2
-K2 Fundamentals work
+# prep for data sci bootcamp
