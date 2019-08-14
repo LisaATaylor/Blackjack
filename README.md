@@ -1,1 +1,1 @@
-# prep for data sci bootcamp
+# Coding exercises - prep for data sci bootcamp
