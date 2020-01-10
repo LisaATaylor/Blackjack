@@ -1,1 +1,1 @@
-# Coding exercises - prep for data sci bootcamp
+Two blackjack implementations developed as python coding exercises.
